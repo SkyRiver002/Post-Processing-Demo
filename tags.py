@@ -4,33 +4,15 @@ import math
 import csv
 
 def extract_target_area_centercoor(cv2image):  # 提取离散目标中心坐标
-    # 二化值
     gray_img = cv2.cvtColor(cv2image, cv2.COLOR_BGR2GRAY)
     th, binary = cv2.threshold(gray_img, 0, 255, cv2.THRESH_OTSU)
-    # 获取轮廓的点集
     contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     coor = []
     for i in range(len(contours)):
-        # 取最大的边缘轮廓点集
-        # contours = max(contours, key=cv2.contourArea)
-
-        # 求取轮廓的矩
         M = cv2.moments(contours[i])
-
-        # 画出轮廓
-        #cv2.drawContours(cv2image, contours[i], -1, (0, 0, 255), 3)
-        #bounding_boxes = [cv2.boundingRect(cnt) for cnt in contours[i]]
-        # for bbox in bounding_boxes:
-        #     [x, y, w, h] = bbox
-        #     cv2.rectangle(cv2image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-        # 通过矩来计算轮廓的中心坐标
         cx = int(M['m10'] / M['m00'])
         cy = int(M['m01'] / M['m00'])
         coor.append([cx, cy])
-        # print(f"({cx},{cy})")
-    # cv2.imshow("name", cv2image)
-    # cv2.waitKey(0)
     return coor
 
 
